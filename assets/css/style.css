@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+@layer base {
+  /* baloo-chettan-2-700 - latin */
+  @font-face {
+    font-family: 'Kanit';
+    font-style: normal;
+    src: url('../fonts/Kanit/Kanit-Medium.ttf');
+  }
+}
+.container {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+.font-kanit {
+  font-family: 'Kanit';
+}
