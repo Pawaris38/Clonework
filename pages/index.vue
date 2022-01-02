@@ -1,10 +1,9 @@
 <template>
   <div class="flex flex-col z-1">
-    <spotlight-section> </spotlight-section>
-    <news></news>
-    <story></story>
-    <trending></trending>
-    <h1 class="text-red-500">{{ counter }}</h1>
+    <spotlight-section class="mb-12"> </spotlight-section>
+    <news class="mb-12"></news>
+    <story class="mb-12"></story>
+    <trending class="mb-12"></trending>
   </div>
 </template>
 <script>
@@ -19,11 +18,6 @@ export default {
     SpotlightSection,
     Story,
     trending,
-  },
-  computed: {
-    counter() {
-      return this.$store.state.counter
-    },
   },
 }
 </script>

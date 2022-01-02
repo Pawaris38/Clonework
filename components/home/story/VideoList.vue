@@ -1,53 +1,41 @@
 <template>
-  <div class="w-full cursor-pointer" @click="chooseVideo">
-    <div class="overflow-auto w-full h-full">
-      <div class="flex mb-2">
-        <div class="w-4/6 mr-4">
-          <div class="max-w-xs min-w-min">
-            <base-card class="aspect-w-16 aspect-h-9">
-              <img :src="image" class="" />
-            </base-card>
-          </div>
-        </div>
-        <div class="w-full leading-4">
-          <h3 class="text-base lineclamp2">
-            <!-- {{ comment }} -->
-            The Witcher: Blood Origin - Official Teaser Trailer
-          </h3>
-        </div>
+  <div class="overflow-auto w-full h-full flex mb-2">
+    <div class="w-4/6 mr-4 relative" :class="{ isplay: isPlay }">
+      <div
+        class="max-w-xs min-w-min relative cursor-pointer"
+        @click="selectVideo"
+      >
+        <base-card class="aspect-w-16 aspect-h-9">
+          <img :src="thumbnail" class="object-cover" /><span
+            v-if="isPlay"
+            class="w-10 md:w-5 lg:w-6 left-1/2 top-1/2 absolute z-10 -translate-x-5 -translate-y-3 md:-translate-x-3 md:-translate-y-1"
+            ><img src="@/assets/images/youtube.png" alt=""
+          /></span>
+        </base-card>
       </div>
+    </div>
+    <div class="w-full leading-4 cursor-pointer" @click="selectVideo">
+      <h3 class="text-base line-clamp-2">
+        {{ title }}
+      </h3>
     </div>
   </div>
 </template>
 <script>
-import { ref } from '@nuxtjs/composition-api'
 export default {
   emits: ['selected-video'],
-  props: ['image', 'youtubeUrl'],
-  setup() {
-    const chooseVideo = function () {
-      const data = ref({
-        thumbnail: 'https://www.youtube.com/embed/AJEoJYgktb4',
-      })
-      console.log('component' + data.value.thumbnail)
-      $nuxt.$emit('selected-video', data.value.thumbnail)
+  props: ['thumbnail', 'youtubeUrl', 'title', 'isPlay'],
+  setup(props, context) {
+    const selectVideo = function () {
+      context.emit('selected-video', props.youtubeUrl)
     }
-
-    return { chooseVideo }
+    return { selectVideo }
   },
 }
 </script>
 <style scoped>
-.lineclamp1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
-.lineclamp2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+.isplay {
+  opacity: 0.5;
+  z-index: 2;
 }
 </style>

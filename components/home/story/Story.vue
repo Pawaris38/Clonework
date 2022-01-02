@@ -3,24 +3,28 @@
     <!-- desktop -->
     <div class="container hidden lg:flex lg:justify-between lg:items-start">
       <div class="md:w-5/6 w-full mr-9">
-        <div class="font-bold text-3xl text-red-500 mb-4">Video</div>
-        <div class="container-iframe">
+        <div class="font-bold text-3xl text-primary mb-4">Video</div>
+        <div class="aspect-w-16 aspect-h-9">
           <iframe
-            :src="activeVideo.youtubeUrl"
+            :src="activeVideo"
             frameborder="0"
-            class="responsive-iframe"
+            class="object-cover"
           ></iframe>
         </div>
       </div>
+
       <div class="flex flex-col w-3/6">
-        <div class="text-3xl font-bold text-red-500 md:text-right mb-4">
+        <div class="text-3xl font-bold text-primary md:text-right mb-4">
           <h1>Popular Stories</h1>
         </div>
         <video-list
-          v-for="blog in blogs"
+          v-for="blog in storyContentList"
           :key="blog.id"
-          :image="blog.thumbnail"
-          @click="show"
+          :thumbnail="blog.thumbnail"
+          :youtubeUrl="blog.youtubeUrl"
+          :title="blog.title"
+          :isPlay="blog.isPlay"
+          @selected-video="selectVideo"
         ></video-list>
       </div>
     </div>
@@ -28,46 +32,54 @@
     <!-- tablet -->
     <div class="md:container lg:hidden hidden md:flex">
       <div class="md:w-5/6 w-full mr-9">
-        <div class="font-bold text-3xl text-red-500 mb-4">Video</div>
+        <div class="font-bold text-3xl text-primary mb-4">Video</div>
         <div class="aspect-w-16 aspect-h-9">
           <iframe
-            src="https://www.youtube.com/embed/7vI0DtkWaD0"
+            :src="activeVideo"
             frameborder="0"
             class="w-full h-full object-cover"
           ></iframe>
         </div>
       </div>
       <div class="flex flex-col w-3/6">
-        <div class="text-3xl font-bold text-red-500 md:text-right mb-4">
+        <div class="text-3xl font-bold text-primary md:text-right mb-4">
           <h1>Popular Stories</h1>
         </div>
         <video-list
-          v-for="blog in blogs"
+          v-for="blog in storyContentList"
           :key="blog.id"
-          :image="blog.thumbnail"
+          :thumbnail="blog.thumbnail"
+          :youtubeUrl="blog.youtubeUrl"
+          :title="blog.title"
+          :isPlay="blog.isPlay"
+          @selected-video="selectVideo"
         ></video-list>
       </div>
     </div>
     <!-- mobile -->
     <div class="container-none md:hidden flex flex-col px-2">
       <div class="md:w-5/6 w-full mr-9">
-        <div class="font-bold text-3xl text-red-500 mb-4">Video</div>
+        <div class="font-bold text-3xl text-primary mb-4">Video</div>
         <div class="aspect-w-16 aspect-h-9">
           <iframe
-            src="https://www.youtube.com/embed/7vI0DtkWaD0"
+            :src="activeVideo"
             frameborder="0"
             class="w-full h-full object-cover"
           ></iframe>
         </div>
       </div>
       <div class="flex flex-col w-full">
-        <div class="text-3xl font-bold text-red-500 md:text-right mb-4">
+        <div class="text-3xl font-bold text-primary md:text-right mb-4">
           <h1>Popular Stories</h1>
         </div>
         <video-list
-          v-for="blog in blogs"
+          v-for="blog in storyContentList"
           :key="blog.id"
-          :image="blog.thumbnail"
+          :thumbnail="blog.thumbnail"
+          :youtubeUrl="blog.youtubeUrl"
+          :title="blog.title"
+          :isPlay="blog.isPlay"
+          @selected-video="selectVideo"
         ></video-list>
       </div>
     </div>
@@ -75,57 +87,35 @@
 </template>
 <script>
 import VideoList from './VideoList.vue'
-import { computed, reactive, ref } from '@nuxtjs/composition-api'
+import { useStore, ref, watch } from '@nuxtjs/composition-api'
 export default {
   components: {
     VideoList,
   },
+
   setup() {
-    const blogs = reactive([
-      {
-        id: 1,
-        thumbnail:
-          'https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8MTYlM0E5fGVufDB8fDB8fA%3D%3D&w=1000&q=80',
-        youtubeUrl: 'https://www.youtube.com/embed/7vI0DtkWaD0',
-      },
-      {
-        id: 2,
-        thumbnail:
-          'https://i.ytimg.com/vi/jn9mHzXJIV0/hqdefault.jpg?sqp=-oaymwEZCNACELwBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLAvJvk4k_UNB9nst4pFP-txM1TLZA',
-        youtubeUrl: 'https://www.youtube.com/embed/7vI0DtkWaD0',
-      },
-      {
-        id: 3,
-        thumbnail:
-          'https://i.ytimg.com/vi/jn9mHzXJIV0/hqdefault.jpg?sqp=-oaymwEZCNACELwBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLAvJvk4k_UNB9nst4pFP-txM1TLZA',
-        youtubeUrl: 'https://www.youtube.com/embed/7vI0DtkWaD0',
-      },
-      {
-        id: 4,
-        thumbnail:
-          'https://i.ytimg.com/vi/jn9mHzXJIV0/hqdefault.jpg?sqp=-oaymwEZCNACELwBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLAvJvk4k_UNB9nst4pFP-txM1TLZA',
-        youtubeUrl: 'https://www.youtube.com/embed/7vI0DtkWaD0',
-      },
-    ])
-    const activeVideo = ref(blogs[0])
+    const store = useStore()
+    const storyContentList = ref(store.getters['home/storyContent'])
+    const activeVideo = ref(storyContentList.value[0].youtubeUrl)
 
-    const saveData = computed(function (data) {
-      console.log(data)
+    watch(activeVideo, function (newValue, oldValue) {
+      console.log('Old Value ' + oldValue)
+      console.log('New Value ' + newValue)
     })
-    const show = function (data) {
-      console.log('heee')
-    }
 
-    return { saveData, show, blogs, activeVideo }
+    const selectVideo = function (data) {
+      activeVideo.value = data
+      storyContentList.value.map((item) => {
+        if (item.youtubeUrl === data) {
+          item.isPlay = true
+        } else {
+          item.isPlay = false
+        }
+      })
+    }
+    return { selectVideo, storyContentList, activeVideo }
   },
 }
-//  thumbnail:
-//       'https://i.ytimg.com/vi/jn9mHzXJIV0/hqdefault.jpg?sqp=-oaymwEZCNACELwBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLAvJvk4k_UNB9nst4pFP-txM1TLZA',
-//     youtubeURL: 'https://www.youtube.com/embed/jn9mHzXJIV0',
-
-// thumbnail:
-//       'https://i.ytimg.com/vi/jn9mHzXJIV0/hqdefault.jpg?sqp=-oaymwEZCNACELwBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLAvJvk4k_UNB9nst4pFP-txM1TLZA',
-//     youtubeURL: 'https://www.youtube.com/embed/jn9mHzXJIV0',
 </script>
 <style scoped>
 .container-iframe {

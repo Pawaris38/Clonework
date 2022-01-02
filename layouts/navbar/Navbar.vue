@@ -5,11 +5,13 @@
       class="lg:flex items-center justify-between flex-wrap bg-fade py-6 px-20 block hidden"
     >
       <div class="flex items-center flex-shrink-0 text-white mr-6 flex-grow">
-        <img
-          class="fill-current h-8 w-auto"
-          src="@/assets/images/gameson-logo.png"
-          alt=""
-        />
+        <a href="/">
+          <img
+            class="fill-current h-8 w-auto"
+            src="@/assets/images/gameson-logo.png"
+            alt="logo-gameson"
+          />
+        </a>
       </div>
 
       <div class="w-full flex items-center w-auto">

@@ -30,7 +30,11 @@ module.exports = {
     animation: ['motion-safe', 'motion-reduce'],
   },
 
-  plugins: [require('daisyui'), require('@tailwindcss/aspect-ratio')],
+  plugins: [
+    require('daisyui'),
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/line-clamp'),
+  ],
   daisyui: {
     styled: true,
     themes: false,
